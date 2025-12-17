@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderController;
 
+// KPI Stats (Debe ir antes de las rutas que usan {id})
+Route::get('/orders/stats', [OrderController::class, 'stats']);
+
 // List all orders
 Route::get('/orders', [OrderController::class, 'index']);
 
