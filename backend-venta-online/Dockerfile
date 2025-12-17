@@ -1,8 +1,10 @@
 FROM php:8.2-apache
 
-# Instalar extensiones necesarias para Laravel y Postgres
+# INSTALACIÓN CORREGIDA: Incluimos libpq-dev, git y unzip
 RUN apt-get update && apt-get install -y \
     libpq-dev \
+    git \
+    unzip \
     && docker-php-ext-install pdo pdo_pgsql
 
 # Habilitar mod_rewrite para Laravel
@@ -17,9 +19,11 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 # Cambiar el DocumentRoot de Apache a la carpeta /public de Laravel
 RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
 
-# Instalar dependencias de PHP
+# Instalar Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-RUN composer install --no-dev --optimize-autoloader
+
+# Instalar dependencias de PHP (ahora funcionará con git y unzip)
+RUN composer install --optimize-autoloader
 
 # Exponer puerto 80
 EXPOSE 80
